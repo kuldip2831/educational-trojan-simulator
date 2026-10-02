@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% set page_title = "Instructor Dashboard" %}
+{% block content %}
+<section class="dashboard-hero">
+    <div>
+        <p class="eyebrow">Instructor Console</p>
+        <h2>SOC Training Overview</h2>
+        <p>Monitor student exercises, detection events, sandbox status, and audit integrity from one console.</p>
+    </div>
+    <a class="button" href="{{ url_for('security_dashboard') }}">Open Security Dashboard</a>
+</section>
+<section class="grid six">
+    <div class="metric"><span>Total Students</span><strong data-counter>{{ stats.students }}</strong></div>
+    <div class="metric"><span>Total Simulations</span><strong data-counter>{{ stats.simulations }}</strong></div>
+    <div class="metric"><span>Threats Detected</span><strong data-counter>{{ stats.detections }}</strong></div>
+    <div class="metric"><span>Blocked Operations</span><strong data-counter>{{ stats.blocked }}</strong></div>
+    <div class="metric"><span>Quarantined</span><strong data-counter>{{ stats.quarantined }}</strong></div>
+    <div class="metric"><span>Audit Integrity</span><strong>{{ "OK" if stats.audit_verified else "FAIL" }}</strong></div>
+</section>
+<section class="grid two">
+    <div class="panel table-panel">
+        <div class="section-head"><h2>Recent Security Events</h2><span class="badge badge-info">LIVE</span></div>
+        <table><thead><tr><th>Severity</th><th>Event</th><th>Decision</th></tr></thead><tbody>
+        {% for event in events %}
+        <tr><td><span class="badge badge-{{ event.severity|lower }}">{{ event.severity }}</span></td><td>{{ event.event_type }}</td><td>{{ event.decision }}</td></tr>
+        {% else %}<tr><td colspan="3" class="empty">No security events yet.</td></tr>{% endfor %}
+        </tbody></table>
+    </div>
+    <div class="panel table-panel">
+        <div class="section-head"><h2>Student Performance</h2><a href="{{ url_for('learning_results') }}">View all</a></div>
+        <table><thead><tr><th>Student</th><th>Simulation</th><th>Score</th></tr></thead><tbody>
+        {% for row in results[:8] %}
+        <tr><td>{{ row.email }}</td><td>{{ row.simulation }}</td><td>{{ row.score }}%</td></tr>
+        {% else %}<tr><td colspan="3" class="empty">No learning results yet.</td></tr>{% endfor %}
+        </tbody></table>
+    </div>
+</section>
+{% endblock %}

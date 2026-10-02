@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% set page_title = "Educational Trojan Behaviour Simulator" %}
+{% block content %}
+<section class="hero hero-grid">
+    <div class="hero-content">
+        <p class="eyebrow">Safe Cybersecurity Training Platform</p>
+        <h1>Educational Trojan Behaviour Simulator</h1>
+        <p>
+            Understand malicious behaviour safely. Detect. Analyse. Defend. Restore.
+        </p>
+        <div class="hero-actions">
+            <a class="button" href="{{ url_for('login') }}">Launch Training</a>
+            <a class="button button-ghost" href="#capabilities">Learn More</a>
+        </div>
+        <div class="hero-warning">NO REAL MALWARE IS EXECUTED. Dummy files only.</div>
+    </div>
+    <div class="workflow-panel">
+        <span>SIMULATE</span><i></i><span>DETECT</span><i></i><span>ANALYSE</span><i></i><span>QUARANTINE</span><i></i><span>ROLLBACK</span>
+    </div>
+</section>
+
+<section id="capabilities" class="grid five">
+    <article class="capability-card"><strong>Safe Simulation</strong><span>Dummy file behaviours only</span></article>
+    <article class="capability-card"><strong>Zero Trust</strong><span>Deny by default controls</span></article>
+    <article class="capability-card"><strong>Defence Mode</strong><span>Detection and alerts</span></article>
+    <article class="capability-card"><strong>Rollback</strong><span>Snapshot restoration</span></article>
+    <article class="capability-card"><strong>Tamper-Evident Audit</strong><span>Hash-chain verification</span></article>
+</section>
+
+<section class="panel accent-panel">
+    <h2>Controlled Educational Environment</h2>
+    <p>
+        This system performs controlled simulations using dummy text files only in
+        <code>sandbox/dummy_files/</code>. It does not implement malware, credential theft,
+        stealth, evasion, propagation, real persistence, or destructive filesystem operations.
+    </p>
+</section>
+{% endblock %}

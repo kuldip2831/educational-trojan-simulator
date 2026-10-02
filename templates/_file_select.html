@@ -1,0 +1,5 @@
+<select name="source" required>
+    {% for file in files if not file.quarantined %}
+    <option value="{{ file.name }}">{{ file.name }}</option>
+    {% endfor %}
+</select>

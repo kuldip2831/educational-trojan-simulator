@@ -1,0 +1,11 @@
+Flask
+mysql-connector-python
+python-dotenv
+Werkzeug
+pyotp
+qrcode
+Pillow
+pytest
+bandit
+flake8
+Flask-WTF

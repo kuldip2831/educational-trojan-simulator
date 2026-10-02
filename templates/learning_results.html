@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% set page_title = "Learning Results" %}
+{% block content %}
+{% set completed = results|selectattr('completed')|list|length %}
+{% set threats = results|selectattr('threat_detected')|list|length %}
+{% set rollbacks = results|selectattr('rollback_completed')|list|length %}
+{% set avg_score = ((results|sum(attribute='score')) / (results|length))|round(0) if results else 0 %}
+<section class="grid four">
+    <div class="metric"><span>Overall Progress</span><strong>{{ avg_score }}%</strong></div>
+    <div class="metric"><span>Exercises Completed</span><strong>{{ completed }}</strong></div>
+    <div class="metric"><span>Threats Identified</span><strong>{{ threats }}</strong></div>
+    <div class="metric"><span>Rollback Success</span><strong>{{ rollbacks }}</strong></div>
+</section>
+<section class="panel">
+    <h2>Security Score</h2>
+    <progress max="100" value="{{ avg_score }}"></progress>
+    <p class="muted">Scores are generated from completion, detection, and rollback actions.</p>
+</section>
+<section class="panel table-panel">
+    <div class="section-head"><h2>Exercise History</h2><span class="badge badge-info">Training record</span></div>
+    <div class="table-tools"><input class="table-search" type="search" placeholder="Search results" data-table-filter></div>
+    <table class="data-table" data-filterable><thead><tr><th>Student</th><th>Simulation</th><th>Completed</th><th>Threat Detected</th><th>Rollback</th><th>Score</th><th>Date</th></tr></thead><tbody>
+    {% for row in results %}
+    <tr><td>{{ row.email }}</td><td>{{ row.simulation }}</td><td>{{ "YES" if row.completed else "NO" }}</td><td>{{ "YES" if row.threat_detected else "NO" }}</td><td>{{ "YES" if row.rollback_completed else "NO" }}</td><td>{{ row.score }}%</td><td>{{ row.created_at }}</td></tr>
+    {% else %}<tr><td colspan="7" class="empty">No learning results yet.</td></tr>{% endfor %}
+    </tbody></table>
+</section>
+{% endblock %}

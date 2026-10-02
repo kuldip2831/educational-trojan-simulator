@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% set page_title = "Security Dashboard" %}
+{% block content %}
+<section class="soc-header">
+    <div>
+        <p class="eyebrow">SOC Monitoring Console</p>
+        <h2>Security Dashboard</h2>
+        <p>Monitor detections, denied operations, audit integrity, and Zero Trust decisions.</p>
+    </div>
+    <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="verify_audit"><button class="button" type="submit">Verify Audit Integrity</button></form>
+</section>
+<section class="grid five">
+    <div class="metric"><span>Security Events</span><strong data-counter>{{ stats.events }}</strong></div>
+    <div class="metric"><span>Blocked Operations</span><strong data-counter>{{ stats.blocked }}</strong></div>
+    <div class="metric"><span>Detections</span><strong data-counter>{{ stats.detections }}</strong></div>
+    <div class="metric"><span>Quarantined</span><strong data-counter>{{ stats.quarantined }}</strong></div>
+    <div class="metric audit-metric"><span>Audit Chain</span><strong>{{ "VERIFIED" if "VERIFIED" in audit_status else "FAILURE" }}</strong></div>
+</section>
+<section class="grid two">
+    <div class="panel audit-card {{ 'verified' if 'VERIFIED' in audit_status else 'failed' }}">
+        <span>Audit Chain</span>
+        <strong>{{ "VERIFIED" if "VERIFIED" in audit_status else "INTEGRITY FAILURE" }}</strong>
+        <p>{{ audit_status }}</p>
+    </div>
+    <div class="panel">
+        <h2>Zero Trust Decisions</h2>
+        <ul class="decision-list">{% for item in decisions %}<li>{{ item }}</li>{% endfor %}</ul>
+    </div>
+</section>
+<section class="grid four severity-grid">
+    <div class="severity-card low"><span>LOW</span><strong>{{ events|selectattr('severity', 'equalto', 'LOW')|list|length }}</strong></div>
+    <div class="severity-card medium"><span>MEDIUM</span><strong>{{ events|selectattr('severity', 'equalto', 'MEDIUM')|list|length }}</strong></div>
+    <div class="severity-card high"><span>HIGH</span><strong>{{ events|selectattr('severity', 'equalto', 'HIGH')|list|length }}</strong></div>
+    <div class="severity-card critical"><span>CRITICAL</span><strong>{{ events|selectattr('severity', 'equalto', 'CRITICAL')|list|length }}</strong></div>
+</section>
+<section class="panel table-panel">
+    <div class="section-head"><h2>Recent Security Alerts</h2><span class="badge badge-info">Severity labelled</span></div>
+    <div class="table-tools"><input class="table-search" type="search" placeholder="Search alerts" data-table-filter></div>
+    <table class="data-table" data-filterable><thead><tr><th>Timestamp</th><th>User</th><th>Event</th><th>Resource</th><th>Severity</th><th>Status</th></tr></thead><tbody>
+    {% for event in events %}
+    <tr><td>{{ event.created_at }}</td><td>{{ event.email or "local" }}</td><td>{{ event.event_type }}</td><td>{{ event.resource }}</td><td><span class="badge badge-{{ event.severity|lower }}">{{ event.severity }}</span></td><td>{{ event.decision }}</td></tr>
+    {% else %}<tr><td colspan="6" class="empty">No security alerts yet.</td></tr>{% endfor %}
+    </tbody></table>
+</section>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% set endpoint = request.endpoint or "" %}
+<aside class="sidebar" id="sidebar">
+    <a class="brand" href="{{ url_for('student_dashboard') if current_user.role == 'student' else url_for('instructor_dashboard') }}">
+        <span class="brand-mark">ET</span>
+        <span>
+            <strong>Trojan Simulator</strong>
+            <small>Cyber Range</small>
+        </span>
+    </a>
+    <nav class="side-nav" aria-label="Primary">
+        <a class="{{ 'active' if endpoint in ['student_dashboard', 'instructor_dashboard'] else '' }}" href="{{ url_for('student_dashboard') if current_user.role == 'student' else url_for('instructor_dashboard') }}"><span>▦</span> Dashboard</a>
+        <a class="{{ 'active' if endpoint == 'simulation' else '' }}" href="{{ url_for('simulation') }}"><span>▶</span> Simulation Lab</a>
+        <a class="{{ 'active' if endpoint == 'sandbox_files' else '' }}" href="{{ url_for('sandbox_files') }}"><span>□</span> Sandbox Files</a>
+        {% if current_user.role == 'instructor' %}
+        <a class="{{ 'active' if endpoint == 'security_dashboard' else '' }}" href="{{ url_for('security_dashboard') }}"><span>◈</span> Security Dashboard</a>
+        {% endif %}
+        <a class="{{ 'active' if endpoint == 'activity_logs' else '' }}" href="{{ url_for('activity_logs') }}"><span>≡</span> Activity Logs</a>
+        <a class="{{ 'active' if endpoint == 'attack_mapping' else '' }}" href="{{ url_for('attack_mapping') }}"><span>◎</span> MITRE ATT&CK</a>
+        <a class="{{ 'active' if endpoint == 'learning_results' else '' }}" href="{{ url_for('learning_results') }}"><span>◫</span> Learning Results</a>
+        <a class="{{ 'active' if endpoint == 'profile' else '' }}" href="{{ url_for('profile') }}"><span>◯</span> Profile</a>
+    </nav>
+    <div class="side-status">
+        <p>SYSTEM STATUS</p>
+        <span><i class="status-dot"></i> Sandbox Protected</span>
+        <span><i class="status-dot"></i> Defence Mode Active</span>
+    </div>
+    <div class="environment-pill">Educational Environment</div>
+</aside>

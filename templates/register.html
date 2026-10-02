@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set page_title = "Register" %}
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-intel">
+        <p class="eyebrow">Student Enrollment</p>
+        <h2>Join the Safe Simulation Lab</h2>
+        <p>Registration creates a student account. Instructor access is promoted locally for demonstrations.</p>
+        <ul class="check-list">
+            <li>Authenticator-based 2FA required</li>
+            <li>Role-based access controls</li>
+            <li>Sandbox-only dummy file operations</li>
+        </ul>
+    </div>
+    <div class="auth-card">
+        <h1>Create Student Account</h1>
+        <form method="post" class="form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label>Name <input type="text" name="name" required maxlength="120"></label>
+            <label>Email <input type="email" name="email" required maxlength="255"></label>
+            <label>Password
+                <div class="password-field">
+                    <input type="password" name="password" required minlength="8" data-password-input>
+                    <button class="input-action" type="button" data-password-toggle>Show</button>
+                </div>
+            </label>
+            <button class="button" type="submit" data-loading="Creating secure account">Register</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

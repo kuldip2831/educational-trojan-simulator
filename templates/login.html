@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set page_title = "Login" %}
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-intel">
+        <p class="eyebrow">Educational Trojan Simulator</p>
+        <h2>Cybersecurity Training Platform</h2>
+        <ul class="check-list">
+            <li>Sandbox Protected</li>
+            <li>Zero Trust Enforcement</li>
+            <li>Tamper-Evident Audit Logging</li>
+        </ul>
+        <p class="disclaimer">Educational-use system. No real malware is executed.</p>
+    </div>
+    <div class="auth-card">
+        <p class="eyebrow">Secure Access</p>
+        <h1>Welcome Back</h1>
+        <form method="post" class="form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label>Email <input type="email" name="email" required autocomplete="email"></label>
+            <label>Password
+                <div class="password-field">
+                    <input type="password" name="password" required autocomplete="current-password" data-password-input>
+                    <button class="input-action" type="button" data-password-toggle>Show</button>
+                </div>
+            </label>
+            <button class="button" type="submit" data-loading="Checking credentials">Sign In</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

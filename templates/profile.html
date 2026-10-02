@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% set page_title = "Profile" %}
+{% block content %}
+<section class="profile-grid">
+    <div class="panel profile-card">
+        <span class="avatar large">{{ (user.name or user.email)[:2]|upper }}</span>
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.email }}</p>
+        <span class="badge badge-info">{{ user.role|upper }}</span>
+    </div>
+    <div class="panel">
+        <h2>User Information</h2>
+        <dl class="detail-list">
+            <dt>Name</dt><dd>{{ user.name }}</dd>
+            <dt>Email</dt><dd>{{ user.email }}</dd>
+            <dt>Role</dt><dd>{{ user.role|upper }}</dd>
+            <dt>Recent Login</dt><dd>{{ recent_login.created_at if recent_login else "No successful login recorded" }}</dd>
+        </dl>
+    </div>
+    <div class="panel account-security">
+        <h2>Account Security</h2>
+        <div class="security-state">
+            <span>Two-Factor Authentication</span>
+            <strong>ENABLED</strong>
+        </div>
+        <div class="security-state">
+            <span>Session Protection</span>
+            <strong>ACTIVE</strong>
+        </div>
+        <p class="muted">TOTP secrets are not displayed after enrollment.</p>
+    </div>
+</section>
+{% endblock %}

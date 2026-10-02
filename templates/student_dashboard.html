@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% set page_title = "Student Dashboard" %}
+{% block content %}
+<section class="dashboard-hero">
+    <div>
+        <p class="eyebrow">Student Console</p>
+        <h2>Safe Malware-Behaviour Training</h2>
+        <p>Run controlled simulations, detect suspicious behaviour, and restore the sandbox without touching real files.</p>
+    </div>
+    <a class="button" href="{{ url_for('simulation') }}">Quick Start Simulation</a>
+</section>
+<section class="grid four">
+    <div class="metric"><span>SIMULATIONS</span><strong data-counter>{{ stats.total_simulations }}</strong><small>Controlled sessions</small></div>
+    <div class="metric"><span>THREATS DETECTED</span><strong data-counter>{{ stats.detections }}</strong><small>Safe defence alerts</small></div>
+    <div class="metric"><span>ROLLBACKS</span><strong data-counter>{{ stats.rollbacks }}</strong><small>Restored snapshots</small></div>
+    <div class="metric"><span>SECURITY SCORE</span><strong data-counter>{{ stats.progress }}</strong><small>Learning progress</small></div>
+</section>
+<section class="grid two">
+    <div class="panel status-panel">
+        <h2>Security Status</h2>
+        <div class="status-stack">
+            <span><i class="status-dot"></i> Sandbox Protected</span>
+            <span><i class="status-dot"></i> Zero Trust Active</span>
+            <span><i class="status-dot"></i> Defence Mode Active</span>
+        </div>
+        {% if active_sim %}
+        <p class="session-pill">Active simulation expires at <strong>{{ active_sim.expires_at }}</strong></p>
+        {% else %}
+        <p class="muted">No active simulation. Start one before running operations.</p>
+        {% endif %}
+    </div>
+    <div class="panel">
+        <h2>Learning Progress</h2>
+        <div class="progress-ring"><span>{{ stats.progress }}%</span></div>
+        <p class="muted">Score is based on completed exercises, detections, and rollback completion.</p>
+    </div>
+</section>
+<section class="panel table-panel">
+    <div class="section-head"><h2>Recent Activity</h2><a href="{{ url_for('activity_logs') }}">View all</a></div>
+    {% set logs = recent %}
+    {% include "_logs_table.html" %}
+</section>
+{% endblock %}

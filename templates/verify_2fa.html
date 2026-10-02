@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% set page_title = "Two-Factor Authentication" %}
+{% block content %}
+<section class="mfa-shell">
+    {% if enrollment and setup %}
+    <div class="mfa-header">
+        <p class="eyebrow">Account Protection</p>
+        <h1>Secure Your Account</h1>
+        <p>Enable two-factor authentication with an authenticator app.</p>
+    </div>
+    <div class="mfa-grid">
+        <div class="qr-panel">
+            <img class="qr-code" src="data:image/png;base64,{{ setup.qr_base64 }}" alt="TOTP enrollment QR code">
+            <p class="qr-caption">Scan using Microsoft Authenticator</p>
+        </div>
+        <div class="instruction-panel">
+            <h2>Microsoft Authenticator</h2>
+            <ol>
+                <li>Open Microsoft Authenticator on your phone.</li>
+                <li>Tap the <strong>+</strong> button.</li>
+                <li>Select <strong>Other account</strong>.</li>
+                <li>Select <strong>Scan QR code</strong>.</li>
+                <li>Scan the QR code displayed here.</li>
+                <li>Enter the generated 6-digit code below.</li>
+            </ol>
+            <p class="muted">Compatible TOTP apps such as Google Authenticator can also work.</p>
+        </div>
+    </div>
+    <details class="manual-setup">
+        <summary>Can't scan the QR code? Manual Setup</summary>
+        <div class="manual-grid">
+            <div><span>Account</span><strong>{{ setup.account }}</strong></div>
+            <div><span>Issuer</span><strong>{{ setup.issuer }}</strong></div>
+            <div class="secret-row"><span>Secret key</span><strong id="mfa-secret">{{ setup.grouped_secret }}</strong></div>
+            <button class="button button-ghost" type="button" data-copy-target="mfa-secret">Copy Secret</button>
+        </div>
+    </details>
+    <form method="post" class="mfa-verify form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Verification Code
+            <input class="otp-input" type="text" name="token" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required data-otp>
+            <span>Enter the 6-digit verification code</span>
+        </label>
+        <button class="button" type="submit" data-loading="Verifying code">Verify & Enable 2FA</button>
+    </form>
+    <p class="security-note">Secret information is used only for enrollment and is not shown again after setup.</p>
+    {% else %}
+    <div class="auth-card compact-auth">
+        <p class="eyebrow">Step 2 of 2</p>
+        <h1>Enter 2FA Code</h1>
+        <p class="muted">Use the 6-digit code from your authenticator app.</p>
+        <form method="post" class="form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Authenticator code <input class="otp-input" type="text" name="token" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required data-otp></label>
+        <button class="button" type="submit" data-loading="Verifying code">Verify</button>
+        </form>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

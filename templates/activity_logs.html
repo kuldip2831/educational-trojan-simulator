@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set page_title = "Activity Timeline" %}
+{% block content %}
+<section class="dashboard-hero">
+    <div>
+        <p class="eyebrow">Audit Timeline</p>
+        <h2>Activity Logs</h2>
+        <p>Review simulation actions, targets, detection outcomes, and status markers.</p>
+    </div>
+</section>
+<section class="panel table-panel">
+    <form class="filter-row" method="get">
+        <label>Filter status <input name="status" value="{{ status }}" placeholder="SUCCESS"></label>
+        <button class="button button-ghost" type="submit">Filter</button>
+        <a class="button button-ghost" href="{{ url_for('activity_logs') }}">Clear</a>
+    </form>
+    {% include "_logs_table.html" %}
+</section>
+{% endblock %}

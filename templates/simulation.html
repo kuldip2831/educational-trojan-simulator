@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% set page_title = "Simulation Control Panel" %}
+{% block content %}
+<section class="simulation-hero">
+    <div>
+        <p class="eyebrow">Simulation Lab</p>
+        <h2>Controlled Trojan Behaviour Exercises</h2>
+        <p>Every operation is verified by Zero Trust and restricted to dummy files in the approved sandbox.</p>
+    </div>
+    <div class="safety-panel">
+        <h3>Sandbox Status</h3>
+        <strong>PROTECTED</strong>
+        <span>Path: <code>sandbox/dummy_files/</code></span>
+        <span>Zero Trust: ACTIVE</span>
+        <span>Defence Mode: ACTIVE</span>
+        {% if active_sim %}
+        <span>Session: VALID until {{ active_sim.expires_at }}</span>
+        {% else %}
+        <span>Session: NOT STARTED</span>
+        {% endif %}
+    </div>
+</section>
+
+<section class="panel split command-bar">
+    <div>
+        <h3>Session Control</h3>
+        <p class="muted">Start a 24-hour training session before running simulated operations.</p>
+    </div>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="start">
+        <select name="simulation_type">{% for key, label in actions.items() %}<option value="{{ key }}">{{ label }}</option>{% endfor %}</select>
+        <button class="button" type="submit">Start Session</button>
+    </form>
+</section>
+
+<section class="simulation-grid">
+    <form method="post" class="sim-card form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="rename">
+        <div class="sim-icon">RN</div><h3>File Rename</h3>
+        <p>Rename a dummy file inside the sandbox to demonstrate suspicious artefact changes.</p>
+        <span class="badge badge-low">LOW RISK EDUCATIONAL</span>
+        <label>Source {% include "_file_select.html" %}</label>
+        <label>New filename <input name="new_name" placeholder="renamed_dummy.txt" required></label>
+        <button class="button" type="submit">Run Rename</button>
+    </form>
+    <form method="post" class="sim-card form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="copy">
+        <div class="sim-icon">CP</div><h3>File Copy</h3>
+        <p>Copy a dummy file to another sandbox location. No external transfer occurs.</p>
+        <span class="badge badge-low">SANDBOX ONLY</span>
+        <label>Source {% include "_file_select.html" %}</label>
+        <label>Destination <input name="destination" placeholder="copy_dummy.txt" required></label>
+        <button class="button" type="submit">Run Copy</button>
+    </form>
+    <form method="post" class="sim-card form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="delete">
+        <div class="sim-icon">QD</div><h3>Simulated Delete</h3>
+        <p>Move a dummy file to internal quarantine. No permanent deletion is performed.</p>
+        <span class="badge badge-medium">DETECTION TRAINING</span>
+        <label>Source {% include "_file_select.html" %}</label>
+        <button class="button danger" type="submit" data-confirm="Move this dummy file to quarantine?">Quarantine</button>
+    </form>
+    <form method="post" class="sim-card form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="resources">
+        <div class="sim-icon">RS</div><h3>Resource Simulation</h3>
+        <p>Generate safe visual CPU, memory, and disk values without stressing the computer.</p>
+        {% if resource_values %}
+        {% for key, value in resource_values.items() %}
+        <label>{{ key|upper }} <span>{{ value }}%</span><progress max="100" value="{{ value }}"></progress></label>
+        {% endfor %}
+        {% else %}<p class="muted">Generates safe visual values only.</p>{% endif %}
+        <button class="button" type="submit">Generate Visual Load</button>
+    </form>
+</section>
+
+<section class="panel split persistence-panel">
+    <div>
+        <p class="eyebrow">Database-only representation</p>
+        <h3>Simulated Persistence</h3>
+        <p><strong>SIMULATED PERSISTENCE - NO OPERATING SYSTEM CHANGES</strong></p>
+    </div>
+    <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="persistence"><button class="button" type="submit">Create Dummy Persistence Record</button></form>
+</section>
+<section class="panel split kill-panel">
+    <div><h3>Emergency Controls</h3><p class="muted">Rollback restores the dummy sandbox. Stop blocks this simulator session only.</p></div>
+    <div class="button-row">
+        <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="rollback"><button class="button button-ghost" type="submit">Rollback</button></form>
+        <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="kill"><button class="button danger" type="submit" data-confirm="Stop all simulator operations for this session?">Stop All Simulations</button></form>
+    </div>
+</section>
+{% endblock %}

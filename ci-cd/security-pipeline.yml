@@ -1,0 +1,71 @@
+name: Security Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    env:
+      FLASK_SECRET_KEY: ci-only-secret
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_NAME: trojan_simulator_test
+      DB_USER: root
+      DB_PASSWORD: root
+      SIMULATION_MAX_HOURS: 24
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: trojan_simulator_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python Setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint
+        run: flake8 . --exclude .venv --max-line-length=120
+
+      - name: Bandit
+        run: bandit -r . -x .venv,tests
+
+      - name: Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/python
+
+      - name: Pytest
+        run: pytest
+
+      - name: Dependency Check
+        run: python -m pip list --outdated || true
+
+      - name: Gitleaks Secret Check
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Security Result
+        run: echo "Security pipeline completed. Review scanner findings before release."

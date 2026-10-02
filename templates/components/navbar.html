@@ -1,0 +1,22 @@
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="icon-button menu-toggle" type="button" aria-label="Toggle navigation" data-sidebar-toggle>☰</button>
+        <div>
+            <p class="page-kicker">Security Operations Training</p>
+            <h1>{{ page_title or "Educational Trojan Horse Simulation" }}</h1>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <span class="system-secure"><i class="status-dot"></i> SYSTEM SECURE</span>
+        {% if current_user %}
+        <span class="badge badge-info">{{ current_user.role|upper }}</span>
+        <span class="notification-dot" title="Security notifications">●</span>
+        <span class="avatar">{{ (current_user.name or current_user.email)[:2]|upper }}</span>
+        <span class="user-block"><strong>{{ current_user.name }}</strong><small>{{ current_user.email }}</small></span>
+        <a class="button button-ghost" href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a class="button button-ghost" href="{{ url_for('login') }}">Login</a>
+        <a class="button" href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+    </div>
+</header>

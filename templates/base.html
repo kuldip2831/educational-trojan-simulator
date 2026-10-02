@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title or "Educational Trojan Horse Simulation" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-shell">
+        {% if current_user %}
+        {% include "components/sidebar.html" %}
+        {% endif %}
+        <main class="main {% if not current_user %}public-main{% endif %}">
+            {% include "components/navbar.html" %}
+
+            <section class="flash-stack">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% for category, message in messages %}
+                    <div class="toast toast-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endwith %}
+                {% if error %}<div class="toast toast-danger">{{ error }}</div>{% endif %}
+            </section>
+
+            {% block content %}{% endblock %}
+
+            <footer class="footer">Educational use only. No real malware, persistence, propagation, or destructive behavior. © {{ year }}</footer>
+        </main>
+    </div>
+    <div class="modal-backdrop" data-modal>
+        <div class="modal">
+            <h3>Confirm Action</h3>
+            <p data-modal-message>This action requires confirmation.</p>
+            <div class="modal-actions">
+                <button class="button button-ghost" type="button" data-modal-cancel>Cancel</button>
+                <button class="button danger" type="button" data-modal-confirm>Confirm</button>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

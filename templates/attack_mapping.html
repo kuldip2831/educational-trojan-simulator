@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set page_title = "MITRE ATT&CK Mapping" %}
+{% block content %}
+<section class="info-banner">
+    <strong>Educational Mapping</strong>
+    <span>This platform safely simulates behavioural concepts and does not execute real malicious techniques.</span>
+</section>
+<section class="attack-grid">
+    {% for item in mappings %}
+    <article class="attack-card">
+        <div class="section-head"><h3>{{ item.id }}</h3><span class="badge badge-info">{{ item.status }}</span></div>
+        <p><strong>Simulated Behaviour:</strong> {{ item.behavior }}</p>
+        <p>{{ item.explanation }}</p>
+        <div class="attack-meta"><span>Detection</span><p>{{ item.detection }}</p></div>
+        <div class="attack-meta"><span>Mitigation</span><p>{{ item.mitigation }}</p></div>
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}
